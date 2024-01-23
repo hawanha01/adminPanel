@@ -1,10 +1,12 @@
-import './App.css';
+import { Box } from "@mui/material";
+import "./App.css";
+import Dashboard from "./components/dashboard";
 
 function App() {
   return (
-    <div className="App">
-      <div>Learn React</div>
-    </div>
+    <Box className="App">
+      <Dashboard />
+    </Box>
   );
 }
 

@@ -11,7 +11,7 @@ export const getStudentById = (id: number): Student | undefined => {
   return students.find((student) => student.id === id);
 };
 
-export const createStudent = (newStudent: Student): Student => {
+export const addStudent = (newStudent: Student): Student => {
   const id = getNextStudentId();
   const studentWithId = { ...newStudent, id };
   students = [...students, studentWithId];
