@@ -7,7 +7,7 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-import { addCourse, getAllCourses, updateCourse } from "../../api/course";
+import { addCourse, updateCourse } from "../../api/course";
 import { useMutation, useQueryClient } from "react-query";
 import courseValidation from "../../validations/course";
 import { Course } from "../../schema/course";
@@ -79,7 +79,7 @@ export default function CourseForm({
                   try {
                     await courseValidation.validate({ name });
                     if (editCourse) {
-                      await updateCourseMutation(editCourse.id);
+                      await updateCourseMutation();
                     } else {
                       await addCourseMutation({ name });
                     }

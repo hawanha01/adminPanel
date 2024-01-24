@@ -7,35 +7,70 @@ export const getAllStudents = (): Student[] => {
   return students;
 };
 
-export const getStudentById = (id: number): Student | undefined => {
-  return students.find((student) => student.id === id);
+export const getStudentById = async (
+  id: number
+): Promise<Student | undefined> => {
+  const pr = new Promise<Student | undefined>((resolve, reject) => {
+    const student = students.find((student) => student.id === id);
+    if (student) {
+      resolve(student);
+    } else {
+      reject("User not found");
+    }
+  });
+  return pr;
 };
 
-export const addStudent = (newStudent: Student): Student => {
-  const id = getNextStudentId();
-  const studentWithId = { ...newStudent, id };
-  students = [...students, studentWithId];
-  return studentWithId;
+export const addStudent = async (
+  studentName: string,
+  courses: number[]
+): Promise<Student> => {
+  const pr = new Promise<Student>((resolve, reject) => {
+    const id = getNextStudentId();
+    const studentWithId = { name: studentName, id: id, courseIds: courses };
+    students = [...students, studentWithId];
+    resolve(studentWithId);
+  });
+  return pr;
 };
 
-export const updateStudent = (
+export const updateStudent = async (
   id: number,
-  updatedStudent: Student
-): Student | undefined => {
-  students = students.map((student) =>
-    student.id === id ? updatedStudent : student
-  );
-  return getStudentById(id);
+  studentName: string,
+  courses: number[]
+): Promise<Student | undefined> => {
+  const pr = new Promise<Student | undefined>((resolve, reject) => {
+    students = students.map((student) =>
+      student.id === id
+        ? { ...student, name: studentName, courseIds: courses }
+        : student
+    );
+    resolve(getStudentById(id));
+  });
+  return pr;
 };
 
-export const deleteStudent = (id: number): boolean => {
+export const deleteStudent = async (id: number): Promise<boolean> => {
   const initialLength = students.length;
   students = students.filter((student) => student.id !== id);
-  return students.length < initialLength;
+  const pr = new Promise<boolean>((resolve, reject) => {
+    if (students.length < initialLength) {
+      resolve(true);
+    } else {
+      reject(false);
+    }
+  });
+  return pr;
 };
 
-export const getStudentsByCourse = (courseId: number): Student[] => {
-  return students.filter((student) => student.courseIds.includes(courseId));
+export const getStudentsByCourse = (courseId: number): Promise<Student[]> => {
+  const pr = new Promise<Student[]>((resolve, reject) => {
+    const filteredStudents = students.filter((student) =>
+      student.courseIds.includes(courseId)
+    );
+    resolve(filteredStudents);
+  });
+  return pr;
 };
 
 function getNextStudentId(): number {
